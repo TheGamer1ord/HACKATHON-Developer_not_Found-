@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MON BONDHU - Health Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-left">
+        <div class="dropdown">
+          <button class="dropbtn" aria-haspopup="true" aria-expanded="false">☰ Menu</button>
+          <div class="dropdown-content" role="menu">
+            <a href="./maps.html" role="menuitem">Rural Healthcare</a>
+            <a href="#mental-health" role="menuitem">Mental Health</a>
+            <a href="./index.html" role="menuitem">Health Tracker</a>
+            <a href="#maternal-care" role="menuitem">Maternal Care</a>
+            <a href="#telehealth" role="menuitem">Telehealth</a>
+          </div>
+        </div>
+      </div>
+      <div class="navbar-center">
+        <form class="search-bar" role="search" aria-label="Search services" onsubmit="return false;">
+          <input type="text" placeholder="Search health topics..." aria-label="Search" />
+          <button type="button" class="mic-btn" id="voice-search" aria-label="Voice search" title="Voice search">🎤</button>
+          <button type="submit">Search</button>
+        </form>
+      </div>
+      <div class="navbar-right">
+        <a href="#support">Support</a>
+        <a href="#login">Login</a>
+      </div>
+    </nav>
+
+    <header class="hero-section">
+      <h1>Mon Bondhu</h1>
+      <p>Your companion for accessible health and wellbeing in rural communities.</p>
+      <div class="hero-actions">
+        <a class="cta" href="#health-tracker">Start Tracking</a>
+        <a class="cta secondary" href="#telehealth">Connect to a Doctor</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="tips-section" aria-label="Healthcare Tips">
+        <h2>Daily Health Tips</h2>
+        <div class="tips-rotator">
+          <div class="tip-card" id="tip-card" aria-live="polite">
+            <span class="tip-emoji" aria-hidden="true">💡</span>
+            <span class="tip-text">Drink safe water: boil or use purifier to avoid water-borne diseases.</span>
+          </div>
+        </div>
+      </section>
+      <section class="features-grid">
+        <article id="rural-health" class="feature-card">
+          <h2>Rural Healthcare</h2>
+          <p>Find nearby clinics, vaccination camps, and health camps with offline-friendly info.</p>
+          <a class="link" href="./maps.html">Explore</a>
+        </article>
+
+        <article id="mental-health" class="feature-card">
+          <h2>Mental Health</h2>
+          <p>Guided breathing, mood journaling, and helplines for immediate support.</p>
+          <a class="link" href="        ">Explore</a>
+        </article>
+
+        <article id="health-tracker" class="feature-card">
+          <h2>Health Tracker</h2>
+          <p>Track vitals, medicines, water intake, and reminders. Works offline-first.</p>
+          <a class="link" href="./index.html">Explore</a>
+        </article>
+
+        <article id="maternal-care" class="feature-card">
+          <h2>Maternal Care</h2>
+          <p>Week-by-week guidance, ANC reminders, nutrition tips, and danger signs.</p>
+          <a class="link" href="#maternal-care">Explore</a>
+        </article>
+
+        <article id="telehealth" class="feature-card">
+          <h2>Telehealth</h2>
+          <p>Low-bandwidth chat/call with certified practitioners in your language.</p>
+          <a class="link" href="#telehealth">Explore</a>
+        </article>
+      </section>
+
+      <section class="quick-actions">
+        <a class="qa" href="#sos">SOS</a>
+        <a class="qa" href="#reminders">Reminders</a>
+        <a class="qa" href="#records">My Records</a>
+        <a class="qa" href="#tips">Daily Tips</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 2025 Mon Bondhu. For education and hackathon demonstration.</p>
+    </footer>
+    <script>
+      (function() {
+        var tips = [
+          'Drink safe water: boil or use purifier to avoid water-borne diseases.',
+          'Wash hands with soap for 20 seconds before meals and after toilet use.',
+          'Keep a first-aid kit: bandages, ORS, antiseptic, thermometer.',
+          'Child fever: check temperature, give fluids; seek care if persistent.',
+          'Expecting mothers: attend ANC visits and take iron-folic acid.',
+          'Manage stress: 5 minutes of deep breathing twice daily.',
+          'Complete vaccination schedules; keep records safe.',
+          'Reduce mosquito breeding: use nets, remove standing water.',
+          'Eat seasonal fruits/vegetables; reduce salt and sugar intake.'
+        ];
+        var emojis = ['💧','🧼','⛑️','🌡️','🤰','🧘','💉','🦟','🥗'];
+        var idx = 0;
+        var card = document.getElementById('tip-card');
+        var textEl = card ? card.querySelector('.tip-text') : null;
+        var emojiEl = card ? card.querySelector('.tip-emoji') : null;
+        function show(i) {
+          if (!card || !textEl || !emojiEl) return;
+          card.classList.remove('fade-in');
+          void card.offsetWidth; // reflow to restart animation
+          textEl.textContent = tips[i % tips.length];
+          emojiEl.textContent = emojis[i % emojis.length];
+          card.classList.add('fade-in');
+        }
+        show(idx);
+        setInterval(function() {
+          idx = (idx + 1) % tips.length;
+          show(idx);
+        }, 60000); // change every 1 minute
+      })();
+    </script>
+    <script>
+      (function() {
+        var micBtn = document.getElementById('voice-search');
+        var input = document.querySelector('.search-bar input[type="text"]');
+        if (!micBtn || !input) return;
+
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          micBtn.disabled = true;
+          micBtn.title = 'Voice search not supported in this browser';
+          return;
+        }
+
+        var recognizing = false;
+        var recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        function setActive(active) {
+          recognizing = active;
+          if (active) {
+            micBtn.classList.add('listening');
+            micBtn.setAttribute('aria-pressed', 'true');
+          } else {
+            micBtn.classList.remove('listening');
+            micBtn.setAttribute('aria-pressed', 'false');
+          }
+        }
+
+        micBtn.addEventListener('click', function() {
+          if (recognizing) {
+            recognition.stop();
+            return;
+          }
+          try {
+            recognition.start();
+          } catch (e) {
+            // ignore if already started
+          }
+        });
+
+        recognition.addEventListener('start', function() { setActive(true); });
+        recognition.addEventListener('end', function() { setActive(false); });
+        recognition.addEventListener('result', function(e) {
+          var transcript = '';
+          for (var i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) {
+              transcript += e.results[i][0].transcript;
+            }
+          }
+          if (transcript) {
+            input.value = transcript.trim();
+          }
+        });
+        recognition.addEventListener('error', function() { setActive(false); });
+      })();
+    </script>
+  </body>
+
+
+
+</html>

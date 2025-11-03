@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daily Check-in Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- FullCalendar styles -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <h1 class="app__title">Daily Check-in</h1>
+        <div class="app__summary">
+          <div class="summary__item"><span class="label">Today:</span> <span id="summary-today">Not checked in</span></div>
+          <div class="summary__item"><span class="label">Current streak:</span> <span id="summary-streak">0</span></div>
+          <div class="summary__item"><span class="label">Best streak:</span> <span id="summary-best-streak">0</span></div>
+          <div class="summary__actions">
+            <button id="btn-today" class="btn">Go to Today</button>
+            <button id="btn-check-today" class="btn btn--primary">Check-in Today</button>
+            <button id="btn-clear" class="btn btn--danger">Clear All</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="app__main">
+        <div id="calendar"></div>
+        <div class="legend"><span class="checkin-dot"></span> Checked-in day (color reflects mood)</div>
+      </main>
+
+      <footer class="app__footer">
+        <details>
+          <summary>Backup / Restore</summary>
+          <div class="backup">
+            <button id="btn-export" class="btn">Export</button>
+            <label class="file">
+              <input type="file" id="file-import" accept="application/json">
+              <span class="btn">Import</span>
+            </label>
+          </div>
+        </details>
+      </footer>
+    </div>
+
+    <!-- Mood Picker Modal -->
+    <div id="mood-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal__backdrop" data-dismiss></div>
+      <div class="modal__panel" role="document">
+        <div class="modal__header">
+          <h2 class="modal__title">How are you feeling today?</h2>
+        </div>
+        <div class="modal__body">
+          <div class="mood-grid" id="mood-grid" aria-label="Mood scale 0 to 10"></div>
+          <div class="mood-legend">
+            <span>0 = Pain Free</span>
+            <span>10 = Unimaginable</span>
+          </div>
+        </div>
+        <div class="modal__footer">
+          <button class="btn" id="mood-cancel" data-dismiss>Cancel</button>
+          <button class="btn btn--danger" id="mood-remove">Remove Check-in</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FullCalendar script -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+  </html>
