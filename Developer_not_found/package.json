@@ -1,0 +1,16 @@
+
+{
+  "name": "daily-checkin-system",
+  "version": "1.0.0",
+  "description": "Simple daily check-in system with streaks and history",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "nanoid": "^5.0.7"
+  }
+}

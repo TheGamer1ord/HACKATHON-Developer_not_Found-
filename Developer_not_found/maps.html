@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Embedded Google Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="maps.css">
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <h1 class="title">Embedded Google Map</h1>
+        <p class="subtitle">Type a place or paste a location. The map updates instantly.</p>
+      </header>
+
+      <section class="controls" aria-label="Map controls">
+        <form id="map-form" class="form" autocomplete="off">
+          <input id="place-input" class="input" type="text" placeholder="e.g. Eiffel Tower, Paris" aria-label="Place or address">
+          <select id="zoom-input" class="select" aria-label="Zoom level">
+            <option value="8">Zoom 8</option>
+            <option value="10">Zoom 10</option>
+            <option value="12" selected>Zoom 12</option>
+            <option value="14">Zoom 14</option>
+            <option value="16">Zoom 16</option>
+            <option value="18">Zoom 18</option>
+          </select>
+          <button class="btn" id="btn-update" type="submit">Update Map</button>
+          <button class="btn btn--secondary" id="btn-current" type="button">Use My Location</button>
+        </form>
+        <div class="help">Tip: You can also paste a full Google Maps URL; we'll extract the query.</div>
+      </section>
+
+      <main class="content">
+        <div class="map-wrap">
+          <iframe id="map-frame" class="map" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Eiffel%20Tower%2C%20Paris&z=12&output=embed"></iframe>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <button class="btn" id="btn-copy">Copy embed link</button>
+        <span id="copy-status" class="copy-status" role="status" aria-live="polite"></span>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        const frame = document.getElementById('map-frame');
+        const form = document.getElementById('map-form');
+        const placeInput = document.getElementById('place-input');
+        const zoomInput = document.getElementById('zoom-input');
+        const btnCurrent = document.getElementById('btn-current');
+        const btnCopy = document.getElementById('btn-copy');
+        const copyStatus = document.getElementById('copy-status');
+
+        function toEmbedUrl(rawQuery, zoom) {
+          // Accept pasted Google Maps URLs or plain text. Try to extract q= from URL, else use raw text.
+          try {
+            const u = new URL(rawQuery);
+            const q = u.searchParams.get('q') || u.searchParams.get('query') || rawQuery;
+            return `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=${zoom}&output=embed`;
+          } catch (_) {
+            return `https://www.google.com/maps?q=${encodeURIComponent(rawQuery)}&z=${zoom}&output=embed`;
+          }
+        }
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const q = placeInput.value.trim();
+          if (!q) return;
+          frame.src = toEmbedUrl(q, zoomInput.value);
+        });
+
+        btnCurrent.addEventListener('click', function () {
+          if (!navigator.geolocation) return alert('Geolocation not supported in this browser.');
+          navigator.geolocation.getCurrentPosition(function (pos) {
+            const { latitude, longitude } = pos.coords;
+            const q = `${latitude},${longitude}`;
+            placeInput.value = q;
+            frame.src = toEmbedUrl(q, zoomInput.value);
+          }, function () {
+            alert('Unable to get your location.');
+          }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 });
+        });
+
+        btnCopy.addEventListener('click', async function () {
+          try {
+            await navigator.clipboard.writeText(frame.src);
+            copyStatus.textContent = 'Copied!';
+            setTimeout(() => copyStatus.textContent = '', 1500);
+          } catch (_) {
+            copyStatus.textContent = 'Copy failed';
+            setTimeout(() => copyStatus.textContent = '', 1500);
+          }
+        });
+      })();
+    </script>
+  </body>
+  </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>>
